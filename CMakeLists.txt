@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.22)
 project(TriArbBot LANGUAGES CXX)
 
+include(CTest)     
+
 # ---------- Compiler flags ----------
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -32,12 +34,13 @@ CPMAddPackage(
 # ---------- Executable ----------
 add_executable(triarb src/main.cpp)
 target_include_directories(triarb PRIVATE include)
-target_link_libraries(triarb PRIVATE Boost::headers)
+# target_link_libraries(triarb PRIVATE Boost::headers)
 
 # ---------- Unit tests ----------
 add_executable(tests
   test/arbitrage_test.cpp
 )
 target_include_directories(tests PRIVATE include)
-target_link_libraries(tests PRIVATE Catch2::Catch2WithMain Boost::headers)
+# target_link_libraries(tests PRIVATE Catch2::Catch2WithMain Boost::headers)
+target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
 add_test(NAME all_tests COMMAND tests)
