@@ -16,9 +16,9 @@ public:
         boost::asio::io_context& ioc,
         std::string host,
         std::string port,
-        std:: on_frame);
+        std::on_frame);
 
-        void run; // kick off asznc dial + read loop
+        void run(); // kick off asznc dial + read loop
 private:
 
         void on_resolve(boost::beast::error_code, boost::asio::op::tcp::resolver::results_type);
@@ -26,8 +26,8 @@ private:
         void on_handshake(boost::beast::error_code);
         void on_read(boost::beast::error_code, std::size_t bytes);
 
-        boost::asio::ip::tcp:.resolver resolver_;
-        boost::asio::websocket::stream<boost::best::tcp_stream> we_;
+        boost::asio::ip::tcp::resolver resolver_;  // TCP resolver for DNS lookups
+        boost::asio::websocket::stream<boost::beast::tcp_stream> we_;  // WebSocket stream over TCP
         boost::beast::flat_buffer buffer_;
         std::string host_;
         FrameHandler handler_;
