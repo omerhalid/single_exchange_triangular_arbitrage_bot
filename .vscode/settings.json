@@ -79,6 +79,16 @@
         "xstring": "cpp",
         "xtr1common": "cpp",
         "xtree": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "any": "cpp",
+        "codecvt": "cpp",
+        "complex": "cpp",
+        "coroutine": "cpp",
+        "csignal": "cpp",
+        "cstdarg": "cpp",
+        "resumable": "cpp",
+        "shared_mutex": "cpp",
+        "source_location": "cpp",
+        "typeindex": "cpp"
     }
 }
