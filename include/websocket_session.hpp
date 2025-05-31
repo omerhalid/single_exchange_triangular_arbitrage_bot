@@ -25,4 +25,10 @@ private:
         void on_connect(boost::beast::error_code);
         void on_handshake(boost::beast::error_code);
         void on_read(boost::beast::error_code, std::size_t bytes);
+
+        boost::asio::ip::tcp:.resolver resolver_;
+        boost::asio::websocket::stream<boost::best::tcp_stream> we_;
+        boost::beast::flat_buffer buffer_;
+        std::string host_;
+        FrameHandler handler_;
 };
