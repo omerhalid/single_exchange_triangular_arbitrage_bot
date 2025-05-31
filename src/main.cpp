@@ -10,11 +10,10 @@ int main() {
 
     WebsocketSession session(
         ioc,
-        "testnet.binance.vision",   // host
-        "443",                      // port (TLS)
-        "/ws/btcusdt@depth",        // path that the test-net serves
-        [](std::string_view f){ std::cout << f << '\n'; });
-
+        "stream.binance.com",      // host  (main-net)
+        "9443",                    // port  (Binance WS TLS port)
+        "/ws/btcusdt@depth5@100ms",// path  (any of depth, depth5, aggTrade …)
+        [](std::string_view json){ std::cout << json << '\n'; });
 
     // Resolve DNS + Connect + Handshake (starts the async chain)
     session.run();

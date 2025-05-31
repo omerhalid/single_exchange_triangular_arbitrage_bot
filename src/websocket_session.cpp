@@ -92,11 +92,10 @@ void WebsocketSession::on_connect(
             this));
 
     // just set a User-Agent
-    ws_.set_option(
-        ws::stream_base::decorator(
-            [](ws::request_type& req){
-                req.set(http::field::user_agent, "TriArbBot/0.0.1");
-            }));
+    ws_.set_option(ws::stream_base::decorator(
+        [](ws::request_type& r){
+            r.set(http::field::user_agent, "TriArbBot/0.0.1");
+        }));
 
 }
 
