@@ -52,10 +52,13 @@ if(WIN32)
     endif()
 endif()
 
+# ---------- Find dependencies ----------
 find_package(OpenSSL REQUIRED)
 message(STATUS "OpenSSL version: ${OPENSSL_VERSION}")
 message(STATUS "OpenSSL include dir: ${OPENSSL_INCLUDE_DIR}")
 message(STATUS "OpenSSL libraries: ${OPENSSL_LIBRARIES}")
+
+find_package(nlohmann_json CONFIG REQUIRED)
 
 # ---------- Executable (TriArbBot) ----------
 add_executable(triarb 
@@ -63,15 +66,17 @@ add_executable(triarb
   src/websocket_session.cpp
 )
 
-# Include our headers and Boost’s include directory
+# Include our headers and Boost's include directory
 target_include_directories(triarb PRIVATE 
   include 
   ${Boost_INCLUDE_DIRS}
 )
 
+# Link against OpenSSL and JSON library
 target_link_libraries(triarb PRIVATE 
     OpenSSL::SSL 
     OpenSSL::Crypto
+    nlohmann_json::nlohmann_json
 )
 
 # ---------- Unit tests ----------
