@@ -37,12 +37,12 @@
 ## Milestone checklist
 
 ### 1  Bootstrapping
-- [ ] **TODO:** Initialise CMake ≥ 3.22, set  
+- [x] **TODO:** Initialise CMake ≥ 3.22, set  
       `CXX_STANDARD 20`, `-O3 -march=native -flto`.
-- [ ] **TODO:** Pull Catch2 using `CPM.cmake`.
+- [x] **TODO:** Pull Catch2 using `CPM.cmake`.
 
 ### 2  Market-data intake
-- [ ] **TODO:** Implement `WebsocketSession` (Boost::Beast) connecting to  
+- [x] **TODO:** Implement `WebsocketSession` (Boost::Beast) connecting to  
       `wss://stream.binance.com:9443/stream?streams=<symbol>@depth5@100ms`.
 - [ ] **TODO:** Push raw JSON strings into a lock-free  
       `moodycamel::ReaderWriterQueue<OrderBookUpdate>`.
