@@ -26,9 +26,9 @@ private:
         void on_handshake(boost::beast::error_code);
         void on_read(boost::beast::error_code, std::size_t bytes);
 
-        boost::asio::ip::tcp::resolver resolver_;  // TCP resolver for DNS lookups
-        boost::asio::websocket::stream<boost::beast::tcp_stream> we_;  // WebSocket stream over TCP
-        boost::beast::flat_buffer buffer_;
-        std::string host_;
-        FrameHandler handler_;
+        boost::asio::ip::tcp::resolver                                  resolver_;  // TCP resolver for DNS lookups
+        boost::asio::websocket::stream<boost::beast::tcp_stream>        we_;  // WebSocket stream over TCP
+        boost::beast::flat_buffer                                       buffer_;
+        std::string                                                     host_;
+        FrameHandler                                                    handler_;
 };
