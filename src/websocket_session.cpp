@@ -6,7 +6,7 @@ namespace http  = beast::http;
 namespace ws    = beast::websocket;
 namespace net   = boost::asio;
 namespace ssl   = net::ssl;
-using tcp      = net::ip::tcp;
+using tcp       = net::ip::tcp;
 
 WebsocketSession::WebsocketSession(
     net::io_context& ioc,

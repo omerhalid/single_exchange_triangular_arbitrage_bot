@@ -64,6 +64,7 @@ find_package(nlohmann_json CONFIG REQUIRED)
 add_executable(triarb 
   src/main.cpp
   src/websocket_session.cpp
+  src/orderbook.cpp
 )
 
 # Include our headers and Boost's include directory
@@ -82,6 +83,8 @@ target_link_libraries(triarb PRIVATE
 # ---------- Unit tests ----------
 add_executable(tests
   test/arbitrage_test.cpp
+  test/orderbook_test.cpp
+  src/orderbook.cpp
 )
 
 target_include_directories(tests PRIVATE 
@@ -90,6 +93,7 @@ target_include_directories(tests PRIVATE
 
 target_link_libraries(tests PRIVATE 
   Catch2::Catch2WithMain
+  nlohmann_json::nlohmann_json 
 )
 
 add_test(NAME all_tests COMMAND tests)
