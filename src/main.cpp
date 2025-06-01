@@ -31,30 +31,26 @@ int main() {
             std::string stream = j["stream"].get<std::string>();
             const auto& data = j["data"];
 
-            // Create Quote objects from JSON
             Quote bid{
-                std::stod( j["bids"][0][0].get<std::string>() ),
-                std::stod( j["bids"][0][1].get<std::string>() )
+                std::stod(data["bids"][0][0].get<std::string>()),
+                std::stod(data["bids"][0][1].get<std::string>())
             };
             Quote ask{
-                std::stod( j["asks"][0][0].get<std::string>() ),
-                std::stod( j["asks"][0][1].get<std::string>() )
+                std::stod(data["asks"][0][0].get<std::string>()),
+                std::stod(data["asks"][0][1].get<std::string>())
             };
 
-            if(stream == "btcusdt@depth5")
-            {
-                btc_usdt_book.update(j["lastUpdateId"].get<uint64_t>(), bid, ask);
+            if(stream == "btcusdt@depth5") {
+                btc_usdt_book.update(data["lastUpdateId"].get<uint64_t>(), bid, ask);
                 printBookUpdate("BTC-USDT", btc_usdt_book);
             }
-            else if(stream == "ethbtc@depth5")
-            {
-                eth_btc_book.update(j["lastUpdateId"].get<uint64_t>(), bid, ask);
-                printBookUpdate("BTC-USDT", eth_btc_book);
+            else if(stream == "ethbtc@depth5") {
+                eth_btc_book.update(data["lastUpdateId"].get<uint64_t>(), bid, ask);
+                printBookUpdate("ETH-BTC", eth_btc_book);  // Fixed symbol
             }
-            else if(stream == "ethusdt@depth5")
-            {
-                eth_usdt_book.update(j["lastUpdateId"].get<uint64_t>(), bid, ask);
-                printBookUpdate("BTC-USDT", eth_usdt_book);
+            else if(stream == "ethusdt@depth5") {
+                eth_usdt_book.update(data["lastUpdateId"].get<uint64_t>(), bid, ask);
+                printBookUpdate("ETH-USDT", eth_usdt_book);  // Fixed symbol
             }
             
         });
@@ -70,20 +66,26 @@ int main() {
 
 void printBookUpdate(const std::string& symbol, const OrderBook& book)
 {
+    static std::unordered_map<std::string, Quote> lastBids;
+    static std::unordered_map<std::string, Quote> lastAsks;
+
     const auto bestBid = book.bestBid();
     const auto bestAsk = book.bestAsk();
 
-    if(bestBid.px != lastBid.px || bestBid.qty != lastBid.qty || 
-        bestAsk.px != lastAsk.px || bestAsk.qty != lastAsk.qty)
+    if(bestBid.px != lastBids[symbol].px || bestBid.qty != lastBids[symbol].qty || 
+       bestAsk.px != lastAsks[symbol].px || bestAsk.qty != lastAsks[symbol].qty)
     {
-        lastBid = bestBid;
-        lastAsk = bestAsk;
+        lastBids[symbol] = bestBid;
+        lastAsks[symbol] = bestAsk;
 
-        std::cout << std::fixed << std::setprecision(2)
-            << "Best bid: $" << bestBid.px << " (" << bestBid.qty << symbol<<"\n"
-            << "Best ask: $" << bestAsk.px << " (" << bestAsk.qty << symbol<<"\n"
-            << "Spread: $" << (bestAsk.px - bestBid.px)
+        // Add different precision for ETH-BTC pair
+        auto precision = (symbol == "ETH-BTC") ? 8 : 2;
+
+        std::cout << std::fixed << std::setprecision(precision)
+            << symbol << " - "  // Added pair name to output
+            << "Best bid: " << bestBid.px << " (" << bestBid.qty << ")\n"
+            << "Best ask: " << bestAsk.px << " (" << bestAsk.qty << ")\n"
+            << "Spread: " << (bestAsk.px - bestBid.px)
             << "\n\n";
-        
     }
 }
