@@ -1,6 +1,8 @@
 cmake --build . --config Release    # compile
 .\Release\triarb.exe                # run the executable
-ctest -C Release                    # run the tests
+
+# run tests
+ctest -C Release -V                 # run the tests
 
 # Full clean rebuild (if you change dependencies in cmakelist.txt)
 cd ..

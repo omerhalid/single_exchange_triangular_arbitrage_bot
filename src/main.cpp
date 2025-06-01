@@ -1,7 +1,8 @@
 #include "common.hpp"
 #include "websocket_session.hpp"
+#include "orderbook.hpp"
 #include <iostream>
-#include <boost/asio.hpp>    // For boost::asio::io_context
+#include <boost/asio.hpp>
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
@@ -11,17 +12,37 @@ int main() {
 
     boost::asio::io_context ioc;
 
+    OrderBook btc_book("BTCUSDT");
+
     WebsocketSession session(
         ioc,
         "stream.binance.com",
         "9443",
         "/ws/btcusdt@depth5@100ms",
-        [](std::string_view msg) {
+        [&btc_book](std::string_view msg) {
+
+            // Parse JSON first
             auto j = json::parse(msg);
-            std::cout << "Best bid: " << j["bids"][0][0] << " (" << j["bids"][0][1] << " BTC)\n"
-                     << "Best ask: " << j["asks"][0][0] << " (" << j["asks"][0][1] << " BTC)\n"
-                     << "Spread: $" << (std::stod(std::string(j["asks"][0][0])) - 
-                                      std::stod(std::string(j["bids"][0][0])))
+
+            // Create Quote objects from JSON
+            Quote bid{
+                std::stod(std::string(j["bids"][0][0])),
+                std::stod(std::string(j["bids"][0][1]))
+            };
+            Quote ask{
+                std::stod(std::string(j["asks"][0][0])),
+                std::stod(std::string(j["asks"][0][1]))
+            };
+
+            btc_book.update(j["lastUpdateId"].get<uint64_t>(), bid, ask);
+
+            const auto bestBid = btc_book.bestBid();
+            const auto bestAsk = btc_book.bestAsk();
+
+            std::cout << std::fixed << std::setprecision(2)
+                     << "Best bid: $" << bestBid.px << " (" << bestBid.qty << " BTC)\n"
+                     << "Best ask: $" << bestAsk.px << " (" << bestAsk.qty << " BTC)\n"
+                     << "Spread: $" << (bestAsk.px - bestBid.px)
                      << "\n\n";
         });
 
