@@ -26,26 +26,36 @@ int main() {
 
             // Create Quote objects from JSON
             Quote bid{
-                std::stod(std::string(j["bids"][0][0])),
-                std::stod(std::string(j["bids"][0][1]))
+                std::stod( j["bids"][0][0].get<std::string>() ),
+                std::stod( j["bids"][0][1].get<std::string>() )
             };
             Quote ask{
-                std::stod(std::string(j["asks"][0][0])),
-                std::stod(std::string(j["asks"][0][1]))
+                std::stod( j["asks"][0][0].get<std::string>() ),
+                std::stod( j["asks"][0][1].get<std::string>() )
             };
+
+            static Quote lastBid{}, lastAsk{};
 
             btc_book.update(j["lastUpdateId"].get<uint64_t>(), bid, ask);
 
             const auto bestBid = btc_book.bestBid();
             const auto bestAsk = btc_book.bestAsk();
 
-            std::cout << std::fixed << std::setprecision(2)
-                     << "Best bid: $" << bestBid.px << " (" << bestBid.qty << " BTC)\n"
-                     << "Best ask: $" << bestAsk.px << " (" << bestAsk.qty << " BTC)\n"
-                     << "Spread: $" << (bestAsk.px - bestBid.px)
-                     << "\n\n";
-        });
+            if(bestBid.px != lastBid.px || bestBid.qty != lastBid.qty || 
+               bestAsk.px != lastAsk.px || bestAsk.qty != lastAsk.qty)
+            {
+                lastBid = bestBid;
+                lastAsk = bestAsk;
 
+                std::cout << std::fixed << std::setprecision(2)
+                    << "Best bid: $" << bestBid.px << " (" << bestBid.qty << " BTC)\n"
+                    << "Best ask: $" << bestAsk.px << " (" << bestAsk.qty << " BTC)\n"
+                    << "Spread: $" << (bestAsk.px - bestBid.px)
+                    << "\n\n";
+                
+            }
+        });
+            
     // Resolve DNS + Connect + Handshake (starts the async chain)
     session.run();
 
