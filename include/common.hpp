@@ -11,4 +11,4 @@ struct Quote{
     double qty; // quantity
 };
 
-constexpr auto version = "TriArbBot 0.0.1";
+constexpr auto version = "TriArbBot 0.0.2";

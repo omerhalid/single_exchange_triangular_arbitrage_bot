@@ -46,6 +46,7 @@ void WebsocketSession::on_resolve(
         std::cerr << "Resolve error: " << ec.message() << "\n";
         return;
     }
+    std::cout << "DNS resolved successfully\n";  // Add debug print
 
     // Set a 30‐second timeout on the underlying TCP layer
     beast::get_lowest_layer(ws_).expires_after(std::chrono::seconds(30));
@@ -66,6 +67,7 @@ void WebsocketSession::on_connect(
         std::cerr << "Connect error: " << ec.message() << "\n";
         return;
     }
+    std::cout << "TCP connected to " << endpoint << "\n";  // Add debug print
 
     // Set SNI Hostname (many hosts need this to handshake successfully)
     if(!SSL_set_tlsext_host_name(
@@ -113,6 +115,7 @@ void WebsocketSession::on_ssl_handshake(beast::error_code ec)
         std::cerr << "SSL handshake error: " << ec.message() << "\n";
         return;
     }
+    std::cout << "SSL handshake completed\n";  // Add debug print
 
     // Turn off the timeout on the tcp_stream, because
     // the websocket stream has its own timeout system.
@@ -149,9 +152,10 @@ void WebsocketSession::on_ssl_handshake(beast::error_code ec)
 void WebsocketSession::on_handshake(beast::error_code ec)
 {
     if (ec) {
-        std::cerr << "Handshake error: " << ec.message() << "\n";
+        std::cerr << "WebSocket handshake error: " << ec.message() << "\n";
         return;
     }
+    std::cout << "WebSocket connected successfully!\n";  // Add debug print
 
     // We’re now connected and handshaken. Start reading messages into our buffer:
     ws_.async_read(
