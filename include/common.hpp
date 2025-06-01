@@ -8,7 +8,7 @@ using Ts    = std::uint64_t;
 
 struct Quote{
     double px;  // price
-    double qty; // quantitiy
+    double qty; // quantity
 };
 
 constexpr auto version = "TriArbBot 0.0.1";
