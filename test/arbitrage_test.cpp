@@ -4,3 +4,4 @@ TEST_CASE("sanity")
 {
     REQUIRE(2+2 == 4);
 }
+

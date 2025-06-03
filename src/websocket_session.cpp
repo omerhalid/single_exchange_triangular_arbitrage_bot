@@ -1,6 +1,8 @@
 #include "websocket_session.hpp"
 #include <iostream>
 
+namespace triarb {
+
 namespace beast = boost::beast;
 namespace http  = beast::http;
 namespace ws    = beast::websocket;
@@ -46,6 +48,7 @@ void WebsocketSession::on_resolve(
         std::cerr << "Resolve error: " << ec.message() << "\n";
         return;
     }
+    std::cout << "DNS resolved successfully\n";  // Add debug print
 
     // Set a 30‐second timeout on the underlying TCP layer
     beast::get_lowest_layer(ws_).expires_after(std::chrono::seconds(30));
@@ -66,6 +69,7 @@ void WebsocketSession::on_connect(
         std::cerr << "Connect error: " << ec.message() << "\n";
         return;
     }
+    std::cout << "TCP connected to " << endpoint << "\n";  // Add debug print
 
     // Set SNI Hostname (many hosts need this to handshake successfully)
     if(!SSL_set_tlsext_host_name(
@@ -113,6 +117,7 @@ void WebsocketSession::on_ssl_handshake(beast::error_code ec)
         std::cerr << "SSL handshake error: " << ec.message() << "\n";
         return;
     }
+    std::cout << "SSL handshake completed\n";  // Add debug print
 
     // Turn off the timeout on the tcp_stream, because
     // the websocket stream has its own timeout system.
@@ -133,7 +138,6 @@ void WebsocketSession::on_ssl_handshake(beast::error_code ec)
     ws_.set_option(ws::stream_base::decorator(
         [](ws::request_type& req) {
             req.set(http::field::user_agent, "TriArbBot/0.0.1");
-            req.set(http::field::host, "testnet.binance.vision");
             req.set(http::field::upgrade, "websocket");
             req.set(http::field::connection, "upgrade");
             req.set(http::field::sec_websocket_version, "13");
@@ -149,9 +153,10 @@ void WebsocketSession::on_ssl_handshake(beast::error_code ec)
 void WebsocketSession::on_handshake(beast::error_code ec)
 {
     if (ec) {
-        std::cerr << "Handshake error: " << ec.message() << "\n";
+        std::cerr << "WebSocket handshake error: " << ec.message() << "\n";
         return;
     }
+    std::cout << "WebSocket connected successfully!\n";  // Add debug print
 
     // We’re now connected and handshaken. Start reading messages into our buffer:
     ws_.async_read(
@@ -185,3 +190,6 @@ void WebsocketSession::on_read(
             &WebsocketSession::on_read,
             this));
 }
+
+} // namespace triarb
+

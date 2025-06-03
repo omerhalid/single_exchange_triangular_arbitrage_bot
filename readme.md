@@ -1,5 +1,5 @@
 cmake --build . --config Release    # compile
-.\Release\triarb.exe                # run the executable
+./Release/triarb.exe                # run the executable
 
 # run tests
 ctest -C Release -V                 # run the tests
@@ -11,3 +11,4 @@ mkdir build
 cd build
 cmake .. -DCMAKE_TOOLCHAIN_FILE=C:/Users/katka/source/vcpkg/scripts/buildsystems/vcpkg.cmake
 cmake --build . --config Release
+

@@ -20,6 +20,8 @@
 
 /// Asynchronously connects to a Binance WS stream and
 /// forwards each text frame to the supplied callback.
+namespace triarb {
+
 class WebsocketSession {
 public:
     using FrameHandler = std::function<void(std::string_view)>;
@@ -27,7 +29,7 @@ public:
     /// Construct with:
     ///   - ioc: the Asio I/O context
     ///   - host: e.g. "testnet.binance.vision" or "stream.binance.com"
-    ///   - port: "443"
+    ///   - port: "9443"
     ///   - target: e.g. "/stream?streams=btcusdt@depth5@100ms"
     ///   - on_frame: callback invoked on each full JSON frame
     WebsocketSession(
@@ -78,3 +80,6 @@ private:
     std::string target_;
     FrameHandler handler_;
 };
+
+} // namespace triarb
+

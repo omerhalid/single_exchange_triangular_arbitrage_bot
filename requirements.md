@@ -48,8 +48,8 @@
       `moodycamel::ReaderWriterQueue<OrderBookUpdate>`.
 
 ### 3  Order-book cache
-- [ ] **TODO:** Define `struct Quote { double px; double qty; };`
-- [ ] **TODO:** Maintain per-symbol `OrderBook` with best bid/ask and `lastUpdateId`.
+- [x] **TODO:** Define `struct Quote { double px; double qty; };`
+- [x] **TODO:** Maintain per-symbol `OrderBook` with best bid/ask and `lastUpdateId`.
 
 ### 4  Arbitrage engine
 - [ ] **TODO:** Generate compile-time  
