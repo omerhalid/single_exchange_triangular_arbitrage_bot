@@ -27,7 +27,7 @@ public:
     /// Construct with:
     ///   - ioc: the Asio I/O context
     ///   - host: e.g. "testnet.binance.vision" or "stream.binance.com"
-    ///   - port: "443"
+    ///   - port: "9443"
     ///   - target: e.g. "/stream?streams=btcusdt@depth5@100ms"
     ///   - on_frame: callback invoked on each full JSON frame
     WebsocketSession(

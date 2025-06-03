@@ -136,7 +136,6 @@ void WebsocketSession::on_ssl_handshake(beast::error_code ec)
     ws_.set_option(ws::stream_base::decorator(
         [](ws::request_type& req) {
             req.set(http::field::user_agent, "TriArbBot/0.0.1");
-            req.set(http::field::host, "testnet.binance.vision");
             req.set(http::field::upgrade, "websocket");
             req.set(http::field::connection, "upgrade");
             req.set(http::field::sec_websocket_version, "13");

@@ -2,6 +2,7 @@
 #include "websocket_session.hpp"
 #include "orderbook.hpp"
 #include <iostream>
+#include <iomanip>
 #include <boost/asio.hpp>
 #include <unordered_map>
 #include <nlohmann/json.hpp>
@@ -11,6 +12,8 @@ using json = nlohmann::json;
 OrderBook btc_usdt_book("BTCUSDT");
 OrderBook eth_btc_book("ETHBTC");
 OrderBook eth_usdt_book("ETHUSDT");
+
+std::atomic_bool got_btc{false}, got_ethbtc{false}, got_ethusdt{false};
 
 void printBookUpdate(const std::string& symbol, const OrderBook& book)
 {
@@ -38,8 +41,17 @@ void printBookUpdate(const std::string& symbol, const OrderBook& book)
     }
 }
 
+double last_edge = 0.0;                 // remember last printed edge
+constexpr double EDGE_THRESHOLD = 0.0008;
+
 bool edgeScanner()
 {
+
+    if(!got_btc || !got_ethbtc || !got_ethusdt)
+    {
+        return false;
+    }
+
     // Add validity checks
     if (eth_usdt_book.bestAsk().px <= 0 || 
         eth_btc_book.bestBid().px <= 0 || 
@@ -57,11 +69,14 @@ bool edgeScanner()
         *  btc_usdt_book.bestBid().px * (1.0 - maker)     // sell BTC → USDT
         - 1.0;
 
-    if (edge > 0.0008)   // 0.08 %
+    if(edge > EDGE_THRESHOLD && std::abs(edge - last_edge) > 1e-6)
     {
-        std::cout << "Edge " << edge*100 << "% → FIRE\n";
+        last_edge = edge;
+        std::cout << "Edge " << edge*100 << "% -> FIRE\n";
         return true;
     }
+    last_edge = edge;        // remember even if not profitable
+    return false;
 }
 
 int main() {
@@ -85,8 +100,7 @@ int main() {
 
                 auto j = json::parse(msg);
                 auto stream = j["stream"].get<std::string>();
-                std::cout << "Stream: " << stream << "\n";  // Which pair updated
-
+                
                 // 1) Ensure it has a "stream" field:
                 if (!j.contains("stream") || !j["stream"].is_string())
                     return; // not a combined‐streams data message
@@ -96,6 +110,8 @@ int main() {
                     return;
 
                 auto& data = j["data"];
+                
+                auto id = data["lastUpdateId"].get<uint64_t>();
 
                 // 3) Ensure "bids"/"asks" exist and are non‐empty arrays:
                 if (!data.contains("bids") || !data["bids"].is_array() || data["bids"].empty())
@@ -115,19 +131,19 @@ int main() {
                 
 
                 if (stream == "btcusdt@depth5@100ms") {
-                    btc_usdt_book.update(
-                      data["lastUpdateId"].get<uint64_t>(), bid, ask);
+                    btc_usdt_book.update(id, bid, ask);
                     printBookUpdate("BTC-USDT", btc_usdt_book);
+                    got_btc = true;
                 }
                 else if (stream == "ethbtc@depth5@100ms") {
-                    eth_btc_book.update(
-                      data["lastUpdateId"].get<uint64_t>(), bid, ask);
+                    eth_btc_book.update(id, bid, ask);
                     printBookUpdate("ETH-BTC", eth_btc_book);
+                    got_ethbtc = true;
                 }
                 else if (stream == "ethusdt@depth5@100ms") {
-                    eth_usdt_book.update(
-                      data["lastUpdateId"].get<uint64_t>(), bid, ask);
+                    eth_usdt_book.update(id, bid, ask);
                     printBookUpdate("ETH-USDT", eth_usdt_book);
+                    got_ethusdt = true;
                 }
 
                 // After updating all books, scan for arbitrage opportunities
@@ -146,8 +162,6 @@ int main() {
 
     std::cout << "Running IO context...\n";  // Add debug print
     ioc.run();
-
-    if(edgeScanner()) return 0;
 
     return 0;
 }
