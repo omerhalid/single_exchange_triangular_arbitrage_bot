@@ -3,6 +3,8 @@
 #include <thread>
 #include <vector>
 
+using namespace triarb;
+
 TEST_CASE("Quote construction and comparison", "[orderbook]") {
     Quote q{100.0, 1.5};
     REQUIRE(q.px == 100.0);

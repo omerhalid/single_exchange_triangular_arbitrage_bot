@@ -4,6 +4,8 @@
 #include <string>
 #include <mutex>
 
+namespace triarb {
+
 class OrderBook
 {
     public:
@@ -19,3 +21,5 @@ class OrderBook
         Quote bestAsk_ {0.0, 0.0};
         mutable std::mutex mutex_;
 };
+
+} // namespace triarb

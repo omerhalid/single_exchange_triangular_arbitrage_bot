@@ -1,6 +1,8 @@
 #include "orderbook.hpp"
 
-OrderBook::OrderBook(std::string_view symbol) 
+namespace triarb {
+
+OrderBook::OrderBook(std::string_view symbol)
     : symbol_(std::move(symbol)) 
 {}
 
@@ -19,8 +21,11 @@ Quote OrderBook::bestBid() const
     return bestBid_;
 }
 
-Quote OrderBook::bestAsk() const 
-{ 
+Quote OrderBook::bestAsk() const
+{
     std::lock_guard<std::mutex> lock(mutex_);
     return bestAsk_;
 }
+
+} // namespace triarb
+

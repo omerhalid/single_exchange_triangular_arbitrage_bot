@@ -61,10 +61,11 @@ message(STATUS "OpenSSL libraries: ${OPENSSL_LIBRARIES}")
 find_package(nlohmann_json CONFIG REQUIRED)
 
 # ---------- Executable (TriArbBot) ----------
-add_executable(triarb 
+add_executable(triarb
   src/main.cpp
   src/websocket_session.cpp
   src/orderbook.cpp
+  src/triarb_bot.cpp
 )
 
 # Include our headers and Boost's include directory

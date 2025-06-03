@@ -1,6 +1,8 @@
 #include "websocket_session.hpp"
 #include <iostream>
 
+namespace triarb {
+
 namespace beast = boost::beast;
 namespace http  = beast::http;
 namespace ws    = beast::websocket;
@@ -188,3 +190,6 @@ void WebsocketSession::on_read(
             &WebsocketSession::on_read,
             this));
 }
+
+} // namespace triarb
+

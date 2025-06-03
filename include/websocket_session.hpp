@@ -20,6 +20,8 @@
 
 /// Asynchronously connects to a Binance WS stream and
 /// forwards each text frame to the supplied callback.
+namespace triarb {
+
 class WebsocketSession {
 public:
     using FrameHandler = std::function<void(std::string_view)>;
@@ -78,3 +80,6 @@ private:
     std::string target_;
     FrameHandler handler_;
 };
+
+} // namespace triarb
+
