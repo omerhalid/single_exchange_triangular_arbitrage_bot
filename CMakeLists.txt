@@ -62,16 +62,17 @@ find_package(nlohmann_json CONFIG REQUIRED)
 
 # ---------- Executable (TriArbBot) ----------
 add_executable(triarb
-  src/main.cpp
-  src/websocket_session.cpp
-  src/orderbook.cpp
-  src/triarb_bot.cpp
+    src/main.cpp
+    src/websocket_session.cpp
+    src/orderbook.cpp
+    src/triarb_bot.cpp
+    src/gateway.cpp  
 )
 
-# Include our headers and Boost's include directory
+# Include the headers and Boost's include directory
 target_include_directories(triarb PRIVATE 
-  include 
-  ${Boost_INCLUDE_DIRS}
+    include 
+    ${Boost_INCLUDE_DIRS}
 )
 
 # Link against OpenSSL and JSON library
