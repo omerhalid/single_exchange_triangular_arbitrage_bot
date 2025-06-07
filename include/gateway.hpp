@@ -11,7 +11,9 @@ struct ApiKeys
 
 struct FillReport
 {
-
+    bool   success;      // got ≥1 fill?
+    double qty_filled;   // base asset
+    double price_avg;    // VWAP
 };
 
 class Gateway
@@ -22,5 +24,17 @@ class Gateway
                 ApiKeys                  keys,
                 bool                     live
             );
+
+        void send_order(
+            std::string_view symbol,
+            std::string_view side, // BUY / SELL
+            double qty,
+            double price,
+            std::function<void(FillReport)> cb
+        );
+            
     private:
+
+        std::string host_;
+        ApiKeys keys_;
 };
