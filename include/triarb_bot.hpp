@@ -20,6 +20,7 @@ private:
     void print_book_update(const std::string& symbol, const OrderBook& book);
     bool edge_scanner();
 
+    Gateway gw_;
     OrderBook btc_usdt_book_{"BTCUSDT"};
     OrderBook eth_btc_book_{"ETHBTC"};
     OrderBook eth_usdt_book_{"ETHUSDT"};

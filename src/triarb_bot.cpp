@@ -37,11 +37,21 @@ bool live_toggle = load_live_toggle_from_env();
 Gateway gw(ioc, "api.binance.com", keys, /*live=*/live_toggle);  // start dry-run
 
 TriArbBot::TriArbBot(boost::asio::io_context& ioc)
-    : session_(ioc,
-               "stream.binance.com",
-               "9443",
-               "/stream?streams=btcusdt@depth5@100ms/ethbtc@depth5@100ms/ethusdt@depth5@100ms",
-               [this](std::string_view msg) { handle_frame(msg); }) {}
+    : gw_(ioc, 
+         "api.binance.com", 
+         load_keys_from_env(),
+         load_live_toggle_from_env())
+    , session_(ioc,
+              "stream.binance.com",
+              "9443",
+              "/stream?streams=btcusdt@depth5@100ms/ethbtc@depth5@100ms/ethusdt@depth5@100ms",
+              [this](std::string_view msg) { handle_frame(msg); })
+{
+    // Check MAX_NOTIONAL
+    if (!std::getenv("MAX_NOTIONAL")) {
+        std::cerr << "Warning: MAX_NOTIONAL unset—defaulting to 15 USDT\n";
+    }
+}
 
 void TriArbBot::start() { session_.run(); }
 
@@ -145,12 +155,14 @@ void TriArbBot::handle_frame(std::string_view msg)
         if (edge_scanner()) {
             std::cout << "Arbitrage opportunity found!\n";
 
-            // Step 1: Buy ETH with USDT
-            double qty = 15.0;  // Base amount in USDT
-            double eth_usdt_ask = eth_usdt_book_.bestAsk().px;
+            // Load triangle size from environment
+            const char* env_qty = std::getenv("MAX_NOTIONAL");
+            double max_notional = env_qty ? std::stod(env_qty) : 15.0;
+            double qty = max_notional;  // USDT to spend on ETHUSDT
 
-            gw.send_order("ETHUSDT", "BUY",
-                qty/eth_usdt_ask,              // Convert USDT to ETH quantity
+            double eth_usdt_ask = eth_usdt_book_.bestAsk().px;
+            gw_.send_order("ETHUSDT", "BUY",
+                qty/eth_usdt_ask,
                 eth_usdt_ask,
                 [&](FillReport rep) {
                     if (!rep.success) return;   // Exit if first order fails
