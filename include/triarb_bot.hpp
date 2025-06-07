@@ -1,10 +1,12 @@
 #pragma once
 
 #include "websocket_session.hpp"
+#include "gateway.hpp"
 #include "orderbook.hpp"
 #include <boost/asio.hpp>
 #include <atomic>
 #include <string_view>
+#include <cstdlib> 
 
 namespace triarb {
 

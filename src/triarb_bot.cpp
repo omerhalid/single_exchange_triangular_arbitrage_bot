@@ -8,6 +8,34 @@ using json = nlohmann::json;
 
 namespace triarb {
 
+bool load_live_toggle_from_env()
+{
+    const char* live = std::getenv("LIVE");
+    if (!live) {
+        throw std::runtime_error("Missing LIVE toggle in environment");
+    }
+    
+    // Convert string to bool
+    std::string live_str(live);
+    return live_str == "true" || live_str == "1";
+}
+
+ApiKeys load_keys_from_env() 
+{
+    const char* api_key = std::getenv("BINANCE_API_KEY");
+    const char* api_secret = std::getenv("BINANCE_API_SECRET");
+    
+    if (!api_key || !api_secret) {
+        throw std::runtime_error("Missing BINANCE_API_KEY or BINANCE_API_SECRET in environment");
+    }
+    
+    return ApiKeys{api_key, api_secret};
+}
+
+ApiKeys keys = load_keys_from_env();
+bool live_toggle = load_live_toggle_from_env();
+Gateway gw(ioc, "api.binance.com", keys, /*live=*/live_toggle);  // start dry-run
+
 TriArbBot::TriArbBot(boost::asio::io_context& ioc)
     : session_(ioc,
                "stream.binance.com",
@@ -114,8 +142,46 @@ void TriArbBot::handle_frame(std::string_view msg)
             got_ethusdt_ = true;
         }
 
-        if (edge_scanner())
+        if (edge_scanner()) {
             std::cout << "Arbitrage opportunity found!\n";
+
+            // Step 1: Buy ETH with USDT
+            double qty = 15.0;  // Base amount in USDT
+            double eth_usdt_ask = eth_usdt_book_.bestAsk().px;
+
+            gw.send_order("ETHUSDT", "BUY",
+                qty/eth_usdt_ask,              // Convert USDT to ETH quantity
+                eth_usdt_ask,
+                [&](FillReport rep) {
+                    if (!rep.success) return;   // Exit if first order fails
+                    std::cout << "[GATE] Step 1: Bought ETH with USDT: " 
+                             << rep.qty_filled << " ETH @ " << rep.price_avg << " USDT\n";
+
+                    // Step 2: Sell ETH for BTC
+                    double eth_btc_bid = eth_btc_book_.bestBid().px;
+                    gw.send_order("ETHBTC", "SELL",
+                        rep.qty_filled,         // Use actual filled ETH amount
+                        eth_btc_bid,
+                        [&](FillReport rep2) {
+                            if (!rep2.success) return;
+                            std::cout << "[GATE] Step 2: Sold ETH for BTC: " 
+                                     << rep2.qty_filled << " ETH @ " << rep2.price_avg << " BTC\n";
+
+                            // Step 3: Sell BTC for USDT
+                            double btc_amount = rep2.qty_filled * rep2.price_avg;
+                            double btc_usdt_bid = btc_usdt_book_.bestBid().px;
+                            gw.send_order("BTCUSDT", "SELL",
+                                btc_amount,     // Amount of BTC received
+                                btc_usdt_bid,
+                                [&](FillReport rep3) {
+                                    std::cout << "[GATE] Step 3: Sold BTC for USDT: "
+                                             << rep3.qty_filled << " BTC @ " << rep3.price_avg << " USDT\n";
+                                });
+                        });
+                });
+        }
+
+
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << "\n";
