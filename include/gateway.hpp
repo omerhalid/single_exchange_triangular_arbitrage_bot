@@ -36,5 +36,8 @@ class Gateway
     private:
 
         std::string host_;
+        boost::asio::io_context ioc_;
+        bool live_;
         ApiKeys keys_;
+        boost::asio::ssl::context ctx_
 };
