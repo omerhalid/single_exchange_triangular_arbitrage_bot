@@ -47,8 +47,6 @@ That lines up with anecdotal hobbyist reports: *“pays for coffee, not rent.”
 
 ---
 
-## How hobbyists still make it worthwhile
-
 1. **Learn & build skills that recruiters love**
    Low-latency C++, Asio, WebSockets, REST signing, exchange micro-structure—great portfolio talking points.
 2. **Treat profits as a latency scoreboard**
@@ -61,14 +59,6 @@ That lines up with anecdotal hobbyist reports: *“pays for coffee, not rent.”
    Drops round-trip to 4 – 8 ms and doubles the number of edges you actually capture.
 
 ---
-
-## Bottom line
-
-* **Yes**, you can earn a trickle and—more importantly—gain practical experience in market-making infrastructure.
-* **No**, this single-exchange triangle alone won’t print large passive income without serious latency investment and larger capital.
-
-If you’re happy with that trade-off, let’s move on and wire up the **execution layer** so you can start collecting real-world fill data. Shall we?
-
 
 cmake --build . --config Release    # compile
 ./Release/triarb.exe                # run the executable
