@@ -5,8 +5,6 @@ arbitrage cycle on the Binance spot exchange.  The bot keeps local order books
 for **BTC/USDT**, **ETH/BTC** and **ETH/USDT**, scans them for pricing edges and
 submits orders when an opportunity arises.
 
-A **hobby-scale, single-exchange triangular-arbitrage bot can make a little money**, but only if you keep expectations modest and invest time in the “unsexy” parts (latency, partial-fill handling, fee optimization, and risk limits).  Think *tens of dollars a week* on a few hundred–thousand USDT of inventory—not “quit-your-job” income—unless you eventually graduate to co-located servers, larger capital, and multiple venues.
-
 ---
 
 ## Why profits exist at all
@@ -43,7 +41,7 @@ Those fleeting mismatches are what your bot is detecting when it prints **“EDG
 | **Daily P/L**                 | `20 × 0.0003 × 50 ≈ 0.30 USDT`        |
 | **Monthly**                   | ≈ 9 USDT                              |
 
-That lines up with anecdotal hobbyist reports: *“pays for coffee, not rent.”*
+*“pays for coffee, not rent.”*
 
 ---
 
