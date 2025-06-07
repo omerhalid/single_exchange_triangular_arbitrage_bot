@@ -1,5 +1,10 @@
 ### Single-Exchange Triangular Arbitrage Bot
 
+A small-scale C++20 project that demonstrates how to trade a three-leg
+arbitrage cycle on the Binance spot exchange.  The bot keeps local order books
+for **BTC/USDT**, **ETH/BTC** and **ETH/USDT**, scans them for pricing edges and
+submits orders when an opportunity arises.
+
 A **hobby-scale, single-exchange triangular-arbitrage bot can make a little money**, but only if you keep expectations modest and invest time in the “unsexy” parts (latency, partial-fill handling, fee optimization, and risk limits).  Think *tens of dollars a week* on a few hundred–thousand USDT of inventory—not “quit-your-job” income—unless you eventually graduate to co-located servers, larger capital, and multiple venues.
 
 ---
@@ -79,3 +84,5 @@ cd build
 cmake .. -DCMAKE_TOOLCHAIN_FILE=C:/Users/katka/source/vcpkg/scripts/buildsystems/vcpkg.cmake
 cmake --build . --config Release
 
+
+For detailed build instructions and architecture notes see [docs/README.md](docs/README.md).
