@@ -2,6 +2,7 @@
 #include <functional>
 #include <string>
 #include <boost/asio.hpp>
+#include <boost/asio/ssl.hpp>
 #include <iostream>
 #include <iomanip>      
 #include <sstream>      
