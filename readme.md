@@ -15,7 +15,7 @@ submits orders when an opportunity arises.
 | Inaccurate maker/taker spread after a large market order      | 0.1 – 0.3 %                  | < 100 ms  |
 | Momentary imbalance when one leg is illiquid (∴ high bid/ask) | 0.2 – 0.5 % (but fills thin) | < 1 s     |
 
-Those fleeting mismatches are what your bot is detecting when it prints **“EDGE 0.09 % → FIRE”**.
+Those fleeting mismatches are what the bot is detecting when it prints **“EDGE 0.09 % → FIRE”**.
 
 ---
 
