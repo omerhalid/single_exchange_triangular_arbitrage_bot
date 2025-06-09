@@ -1,6 +1,6 @@
 ### Single-Exchange Triangular Arbitrage Bot
 
-A small-scale C++20 project that demonstrates how to trade a three-leg
+A C++20 project that demonstrates how to trade a three-leg
 arbitrage cycle on the Binance spot exchange.  The bot keeps local order books
 for **BTC/USDT**, **ETH/BTC** and **ETH/USDT**, scans them for pricing edges and
 submits orders when an opportunity arises.
