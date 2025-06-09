@@ -30,8 +30,6 @@ Those fleeting mismatches are what the bot is detecting when it prints **“EDGE
 
 ---
 
-## Realistic P/L sketch for a “bedroom-bot”
-
 | Parameter                     | Conservative value                    |
 | ----------------------------- | ------------------------------------- |
 | Capital tied up               | 1 000 USDT                            |
@@ -40,8 +38,6 @@ Those fleeting mismatches are what the bot is detecting when it prints **“EDGE
 | Average notional / triangle   | 20 USDT (limited by depth / slippage) |
 | **Daily P/L**                 | `20 × 0.0003 × 50 ≈ 0.30 USDT`        |
 | **Monthly**                   | ≈ 9 USDT                              |
-
-*“pays for coffee, not rent.”*
 
 ---
 
