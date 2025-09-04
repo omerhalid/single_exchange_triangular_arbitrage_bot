@@ -5,19 +5,6 @@ arbitrage cycle on the Binance spot exchange.  The bot keeps local order books
 for **BTC/USDT**, **ETH/BTC** and **ETH/USDT**, scans them for pricing edges and
 submits orders when an opportunity arises.
 
----
-
-## Why profits exist at all
-
-| Micro-edge source                                             | Typical size                 | Lifespan  |
-| ------------------------------------------------------------- | ---------------------------- | --------- |
-| Independent order-book moves across three Binance pairs       | 0.03 – 0.15 % (before fees)  | 10–500 ms |
-| Inaccurate maker/taker spread after a large market order      | 0.1 – 0.3 %                  | < 100 ms  |
-| Momentary imbalance when one leg is illiquid (∴ high bid/ask) | 0.2 – 0.5 % (but fills thin) | < 1 s     |
-
-Those fleeting mismatches are what the bot is detecting when it prints **“EDGE 0.09 % → FIRE”**.
-
----
 
 ## Four hurdles between “edge” and **real** profit
 
