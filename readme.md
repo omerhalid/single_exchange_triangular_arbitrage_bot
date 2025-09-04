@@ -26,20 +26,6 @@ submits orders when an opportunity arises.
 | **Daily P/L**                 | `20 × 0.0003 × 50 ≈ 0.30 USDT`        |
 | **Monthly**                   | ≈ 9 USDT                              |
 
----
-
-1. **Learn & build skills that recruiters love**
-   Low-latency C++, Asio, WebSockets, REST signing, exchange micro-structure—great portfolio talking points.
-2. **Treat profits as a latency scoreboard**
-   Even \$0.05 profit on a 0.08 % edge means you beat 99 % of retail bots—an engineering win.
-3. **Leverage maker rebates**
-   Binance pays 0.01 % if your posted order adds liquidity. Two maker legs + one taker leg can turn a 0.05 % raw edge into 0.07 % net.
-4. **Graduate to multi-exchange**
-   Cross-venue arbitrage (e.g., Binance ⇆ Kraken) has larger edges (0.2 – 1 %) at the cost of extra transfer latency and counter-party risk.
-5. **Co-locate or rent a VPS near Tokyo (AWS ap-northeast-1)**
-   Drops round-trip to 4 – 8 ms and doubles the number of edges you actually capture.
-
----
 
 cmake --build . --config Release    # compile
 ./Release/triarb.exe                # run the executable
